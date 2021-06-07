@@ -26,7 +26,7 @@ def loginFail():
     driver.find_element_by_xpath('//*[@id="loginButton"]').submit()
     rs = WebDriverWait(driver, 10).until(EC.presence_of_element_located(
         (By.XPATH, '//*[@id="error-message"]')))
-    print("TC!-login-Fail",rs.text)
+    print("TC3-login-Fail",rs.text)
 #TC2
 def loginFail_nochoose():
     driver.find_element_by_xpath('//*[@id="username"]').send_keys("Admin")
@@ -35,9 +35,12 @@ def loginFail_nochoose():
     driver.find_element_by_xpath('//*[@id="loginButton"]').submit()
     rs = WebDriverWait(driver, 10).until(EC.presence_of_element_located(
         (By.XPATH, '//*[@id="error-message"]')))
-    print("TC!-login-Fail",rs.text)
+    print("TC2-login-Fail-no-choose-location",rs.text)
 #TC5
 def registPartient():
+    home = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/ html / body / header / nav / div[1] / a')))
+    driver.execute_script("arguments[0].click();", home)
     gotoregispage = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//*[@id="referenceapplication-registrationapp-registerPatient-homepageLink-referenceapplication-registrationapp-registerPatient-homepageLink-extension"]'))).click()
     driver.implicitly_wait(5)
@@ -94,8 +97,9 @@ def registPartient():
 
 #TC-7 Find record by Name when that Name available.
 def search_byName():
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '/ html / body / header / nav / div[1] / a'))).click()
+    home = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/ html / body / header / nav / div[1] / a')))
+    driver.execute_script("arguments[0].click();", home)
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '// *[ @ id = "coreapps-activeVisitsHomepageLink-coreapps-activeVisitsHomepageLink-extension"]'))).click()
     WebDriverWait(driver, 10).until(
@@ -107,16 +111,18 @@ def search_byName():
     time.sleep(3)
     tr = table.find_element_by_xpath('// *[ @ id = "patient-search-results-table"] / tbody / tr')
     td = driver.find_element_by_xpath('// *[ @ id = "patient-search-results-table"] / tbody / tr[1] / td[1]')
+    print("TC-7",td.text)
     if(td.text!="No matching records found"):
         td.click()
     else:
-        print("No record")
+        print("TC-7","No record")
     # driver.find_element_by_xpath()
     pass
 #TC6-Find record by ID when that ID available.
 def search_byID():
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '/ html / body / header / nav / div[1] / a'))).click()
+    home = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/ html / body / header / nav / div[1] / a')))
+    driver.execute_script("arguments[0].click();", home)
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '// *[ @ id = "coreapps-activeVisitsHomepageLink-coreapps-activeVisitsHomepageLink-extension"]'))).click()
     WebDriverWait(driver, 10).until(
@@ -128,6 +134,7 @@ def search_byID():
     time.sleep(3)
     tr = table.find_element_by_xpath('// *[ @ id = "patient-search-results-table"] / tbody / tr')
     td = driver.find_element_by_xpath('// *[ @ id = "patient-search-results-table"] / tbody / tr[1] / td[1]')
+    print("TC6-",td.text)
     if(td.text!="No matching records found"):
         td.click()
     else:
@@ -150,6 +157,8 @@ def logOut():
 
 #TC-9 Booking an Appointment is Succesfully.
 def booking():
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/ html / body / header / nav / div[1] / a'))).click()
     el = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, '//*[@id="appointmentschedulingui-homeAppLink-appointmentschedulingui-homeAppLink-extension"]'))).click()
     WebDriverWait(driver, 10).until(
@@ -177,9 +186,11 @@ def booking():
     driver.execute_script("arguments[0].click();", submit)
 
 if __name__ == '__main__':
-    # loginFail()
+    loginFail()
+    loginFail_nochoose()
     login()
     booking()
-    # registPartient()
-    # search()
-    # logOut()
+    registPartient()
+    search_byID()
+    search_byName()
+    logOut()
